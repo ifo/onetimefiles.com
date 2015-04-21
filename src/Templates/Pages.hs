@@ -2,6 +2,7 @@
 
 module Templates.Pages
   (mainPage
+  ,urlPage
   )
 where
 
@@ -21,3 +22,11 @@ mainPage =
                   ] $ do
         input_ [type_ "file", name_ "file"]
         with button_ [type_ "submit"] "Upload"
+
+urlPage url =
+  doctypehtml_ $ do
+    head_ $
+      title_ "Share your One Time File"
+    body_ $ do
+      h1_ "Copy the link below"
+      input_ [type_ "text", value_ url, autofocus_]

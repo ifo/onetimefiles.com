@@ -29,4 +29,4 @@ main =
           (unpack $ uf_name $ fromJust $ H.lookup "file" file))
       case H.lookup "file" file of
         Nothing -> redirect "/"
-        Just uf -> text "saved"
+        Just uf -> T.renderHtmlStrict $ P.urlPage "http://localhost:3000/yourfile"
