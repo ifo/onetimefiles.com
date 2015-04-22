@@ -30,7 +30,10 @@ main =
 
     get ("f" <//> var) $ \dir -> do
       retFileTup <- liftIO $ F.prepAndReturnFileTup dir
-      setHeader
-        "Content-Disposition"
-        ("attachment; filename=\"" <> fst retFileTup <> "\"")
-      file "application/octet-stream" (snd retFileTup)
+      case retFileTup of
+        Nothing -> redirect "/"
+        Just ft -> do
+          setHeader
+            "Content-Disposition"
+            ("attachment; filename=\"" <> fst ft <> "\"")
+          file "application/octet-stream" (snd ft)

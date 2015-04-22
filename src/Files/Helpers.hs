@@ -32,12 +32,15 @@ deleteDownloadedFile :: FilePath -> IO ()
 deleteDownloadedFile = removeDirectoryRecursive
 
 -- TODO move file to deletion area before returning it
--- TODO check to see if location exists, wrap everything in Maybe
-prepAndReturnFileTup :: T.Text -> IO (Text, FilePath)
+prepAndReturnFileTup :: T.Text -> IO (Maybe (Text, FilePath))
 prepAndReturnFileTup tempDir = do
-  fileList <- getDirectoryContents location
-  let fileName = getFileNameFromList fileList
-  return (T.pack fileName, (location <> "/" <> fileName))
+  dirExists <- doesDirectoryExist location
+  case dirExists of
+    False -> return Nothing
+    True -> do
+      fileList <- getDirectoryContents location
+      let fileName = getFileNameFromList fileList
+      return $ Just (T.pack fileName, (location <> "/" <> fileName))
   where
     location :: FilePath
     location = tempFileDir <> "/" <> T.unpack tempDir
