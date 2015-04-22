@@ -6,6 +6,7 @@ module Files.Helpers
 where
 
 import System.Directory (renameFile
+                        ,renameDirectory
                         ,removeDirectoryRecursive
                         ,doesDirectoryExist
                         ,createDirectory
@@ -15,9 +16,12 @@ import System.Random (newStdGen, randomRs, RandomGen)
 import Data.Text as T (pack, unpack, Text)
 import Data.Monoid ((<>))
 
--- TODO turn this into configuration option
+-- TODO turn these into configuration options
 tempFileDir :: FilePath
 tempFileDir = "tempfiles"
+
+deleteFileDir :: FilePath
+deleteFileDir = "deletefiles"
 
 saveUploadedFile :: FilePath -> T.Text -> IO Text
 saveUploadedFile tempFile fileName = do
@@ -31,19 +35,19 @@ saveUploadedFile tempFile fileName = do
 deleteDownloadedFile :: FilePath -> IO ()
 deleteDownloadedFile = removeDirectoryRecursive
 
--- TODO move file to deletion area before returning it
 prepAndReturnFileTup :: T.Text -> IO (Maybe (Text, FilePath))
 prepAndReturnFileTup tempDir = do
-  dirExists <- doesDirectoryExist location
+  dirExists <- doesDirectoryExist oldLocation
   case dirExists of
     False -> return Nothing
     True -> do
-      fileList <- getDirectoryContents location
+      newLocation <- moveDirForDeletion $ T.unpack tempDir
+      fileList <- getDirectoryContents newLocation
       let fileName = getFileNameFromList fileList
-      return $ Just (T.pack fileName, (location <> "/" <> fileName))
+      return $ Just (T.pack fileName, (newLocation <> "/" <> fileName))
   where
-    location :: FilePath
-    location = tempFileDir <> "/" <> T.unpack tempDir
+    oldLocation :: FilePath
+    oldLocation = tempFileDir <> "/" <> T.unpack tempDir
 
 -- TODO not just crash and burn when this fails
 getFileNameFromList :: [FilePath] -> FilePath
@@ -51,6 +55,13 @@ getFileNameFromList [] = error "file not found"
 getFileNameFromList (f:fs)
   | f /= "." && f /= ".." = f
   | otherwise             = getFileNameFromList fs
+
+moveDirForDeletion :: FilePath -> IO FilePath
+moveDirForDeletion dir = do
+  renameDirectory
+    (tempFileDir <> "/" <> dir)
+    (deleteFileDir <> "/" <> dir)
+  return $ deleteFileDir <> "/" <> dir
 
 makeNewFolder :: IO FilePath
 makeNewFolder = do
