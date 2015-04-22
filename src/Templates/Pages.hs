@@ -3,6 +3,7 @@
 module Templates.Pages
   (mainPage
   ,urlPage
+  ,fileTooBig
   )
 where
 
@@ -30,3 +31,13 @@ urlPage url =
     body_ $ do
       h1_ "Copy the link below"
       input_ [type_ "text", value_ url, autofocus_]
+
+fileTooBig :: Html ()
+fileTooBig =
+  doctypehtml_ $ do
+    head_ $
+      title_ "File was too big"
+    body_ $ do
+      p_ "That file was too big."
+      p_ "Please keep files smaller than 10mb for now."
+      p_ $ with a_ [href_ "/"] "Upload a different file"
