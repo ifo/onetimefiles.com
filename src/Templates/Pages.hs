@@ -34,7 +34,10 @@ urlPage url =
       title_ "Share your One Time File"
     body_ $ do
       h3_ "Copy the link below"
-      input_ [type_ "text", value_ url, autofocus_]
+      input_ [id_ "url", type_ "text", value_ url, autofocus_, size_ "151"]
+      script_ $
+        "document.getElementById('url').focus();" <>
+        "document.getElementById('url').select();"
 
 fileTooBig :: Html ()
 fileTooBig =
