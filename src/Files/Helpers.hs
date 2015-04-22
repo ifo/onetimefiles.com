@@ -1,6 +1,7 @@
 module Files.Helpers
   (saveUploadedFile
   ,deleteDownloadedFile
+  ,prepAndReturnFileTup
   )
 where
 
@@ -8,6 +9,7 @@ import System.Directory (renameFile
                         ,removeDirectoryRecursive
                         ,doesDirectoryExist
                         ,createDirectory
+                        ,getDirectoryContents
                         )
 import System.Random (newStdGen, randomRs, RandomGen)
 import Data.Text as T (pack, unpack, Text)
@@ -28,6 +30,24 @@ saveUploadedFile tempFile fileName = do
 
 deleteDownloadedFile :: FilePath -> IO ()
 deleteDownloadedFile = removeDirectoryRecursive
+
+-- TODO move file to deletion area before returning it
+-- TODO check to see if location exists, wrap everything in Maybe
+prepAndReturnFileTup :: T.Text -> IO (Text, FilePath)
+prepAndReturnFileTup tempDir = do
+  fileList <- getDirectoryContents location
+  let fileName = getFileNameFromList fileList
+  return (T.pack fileName, (location <> "/" <> fileName))
+  where
+    location :: FilePath
+    location = tempFileDir <> "/" <> T.unpack tempDir
+
+-- TODO not just crash and burn when this fails
+getFileNameFromList :: [FilePath] -> FilePath
+getFileNameFromList [] = error "file not found"
+getFileNameFromList (f:fs)
+  | f /= "." && f /= ".." = f
+  | otherwise             = getFileNameFromList fs
 
 makeNewFolder :: IO FilePath
 makeNewFolder = do

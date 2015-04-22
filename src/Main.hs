@@ -26,4 +26,11 @@ main =
             F.saveUploadedFile
               (uf_tempLocation uf)
               (uf_name uf)
-          T.renderHtmlStrict $ P.urlPage $ "http://localhost:3000/" <> loc
+          T.renderHtmlStrict $ P.urlPage $ "http://localhost:3000/f/" <> loc
+
+    get ("f" <//> var) $ \dir -> do
+      retFileTup <- liftIO $ F.prepAndReturnFileTup dir
+      setHeader
+        "Content-Disposition"
+        ("attachment; filename=\"" <> fst retFileTup <> "\"")
+      file "application/octet-stream" (snd retFileTup)
