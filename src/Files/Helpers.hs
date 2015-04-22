@@ -1,5 +1,6 @@
 module Files.Helpers
-  (saveUploadedFile
+  (setupDirs
+  ,saveUploadedFile
   ,deleteDownloadedFile
   ,prepAndReturnFileTup
   )
@@ -18,10 +19,18 @@ import Data.Monoid ((<>))
 
 -- TODO turn these into configuration options
 tempFileDir :: FilePath
-tempFileDir = "tempfiles"
+tempFileDir = "temp"
 
 deleteFileDir :: FilePath
-deleteFileDir = "deletefiles"
+deleteFileDir = "delete"
+
+setupDirs :: IO ()
+setupDirs = setupDir tempFileDir >> setupDir deleteFileDir
+  where
+    setupDir :: FilePath -> IO ()
+    setupDir dir = do
+      dirExists <- doesDirectoryExist dir
+      if dirExists then return () else createDirectory dir
 
 saveUploadedFile :: FilePath -> T.Text -> IO Text
 saveUploadedFile tempFile fileName = do

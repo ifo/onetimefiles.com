@@ -14,6 +14,8 @@ main :: IO ()
 main =
   runSpock 3000 $ spockT id $ do
 
+    liftIO F.setupDirs
+
     get "/" $
       T.renderHtmlStrict P.mainPage
 
