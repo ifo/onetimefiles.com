@@ -4,7 +4,7 @@ module Files.Helpers
   )
 where
 
-import System.Directory (copyFile
+import System.Directory (renameFile
                         ,removeDirectoryRecursive
                         ,doesDirectoryExist
                         ,createDirectory
@@ -21,7 +21,7 @@ saveUploadedFile :: FilePath -> T.Text -> IO Text
 saveUploadedFile tempFile fileName = do
   location <- makeNewFolder
   createDirectory $ tempFileDir <> "/" <> location
-  copyFile
+  renameFile
     tempFile
     (tempFileDir <> "/" <> location <> "/" <> (unpack fileName))
   return $ T.pack location
