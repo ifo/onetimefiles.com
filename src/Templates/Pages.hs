@@ -14,9 +14,13 @@ mainPage :: Html ()
 mainPage =
   doctypehtml_ $ do
     head_ $
-      title_ "One Time Files"
+      title_ "One Time Files - Not yet ready, so please don't use"
     body_ $ do
-      h1_ "Upload a file"
+      h1_ "WARNING: DO NOT USE THIS SITE"
+      h1_ "SERIOUSLY, IT'S NOT PRODUCTION READY"
+      h1_ "NOR IS IT SECURE IN ANY WAY"
+      h5_ "but if you stil want to..."
+      h3_ "Upload a file (less than 10mb for now, please)"
       with form_ [method_ "post",
                   action_ "/",
                   enctype_ "multipart/form-data"
@@ -29,7 +33,7 @@ urlPage url =
     head_ $
       title_ "Share your One Time File"
     body_ $ do
-      h1_ "Copy the link below"
+      h3_ "Copy the link below"
       input_ [type_ "text", value_ url, autofocus_]
 
 fileTooBig :: Html ()
