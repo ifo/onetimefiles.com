@@ -22,7 +22,7 @@ mainPage =
       h5_ "but if you stil want to..."
       h3_ "Upload a file (less than 10mb for now, please)"
       with form_ [method_ "post",
-                  action_ "/",
+                  action_ "/f",
                   enctype_ "multipart/form-data"
                   ] $ do
         input_ [type_ "file", name_ "file"]

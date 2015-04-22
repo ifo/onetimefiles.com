@@ -20,7 +20,7 @@ main =
     get "/" $
       T.renderHtmlStrict P.mainPage
 
-    post "/" $ do
+    post "/f" $ do
       mSize <- header "Content-Length"
       case mSize of
         Nothing -> redirect "/"
