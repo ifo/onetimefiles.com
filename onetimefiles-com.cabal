@@ -2,7 +2,7 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                onetimefiles-com
-version:             0.0.0
+version:             0.0.1
 synopsis:            Send a file exactly once
 description:         Upload a file and send the link to the one recipient
 homepage:            onetimefiles.com
