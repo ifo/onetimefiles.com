@@ -1,0 +1,6 @@
+dist
+.git
+temp
+delete
+.cabal-sandbox
+cabal.sandbox.config
